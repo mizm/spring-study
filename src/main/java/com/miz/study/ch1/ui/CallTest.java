@@ -14,7 +14,7 @@ public class CallTest {
     }
 
     public int call() {
-        return userService.test();
+        return 1;
     }
 
 }

@@ -1,13 +1,23 @@
 package com.miz.study.ch1.dao;
 
 import com.miz.study.ch1.domain.User;
+import org.springframework.stereotype.Repository;
 
+import javax.sql.DataSource;
 import java.sql.*;
 
+@Repository
 public class UserDao {
-    public void add(User user) throws ClassNotFoundException, SQLException {
-        Connection c = getConnection();
+    private DataSource dataSource;
 
+    public UserDao(DataSource dataSource) {
+        this.dataSource = dataSource;
+    }
+    public DataSource getDataSource() {
+        return this.dataSource;
+    }
+    public void add(User user) throws SQLException {
+        Connection c = this.dataSource.getConnection();
         PreparedStatement ps = c.prepareStatement(
                 "insert into users(id, name, password) values(?,?,?)");
         ps.setString(1, user.getId());
@@ -20,9 +30,8 @@ public class UserDao {
         c.close();
     }
 
-
-    public User get(String id) throws ClassNotFoundException, SQLException {
-        Connection c = getConnection();
+    public User get(String id) throws SQLException {
+        Connection c = this.dataSource.getConnection();
         PreparedStatement ps = c
                 .prepareStatement("select * from users where id = ?");
         ps.setString(1, id);
@@ -39,12 +48,6 @@ public class UserDao {
         c.close();
 
         return user;
-    }
-
-    private Connection getConnection() throws ClassNotFoundException, SQLException {
-        Class.forName ("org.h2.Driver");
-        Connection c = DriverManager.getConnection ("jdbc:h2:~/test", "sa","");
-        return c;
     }
 
 }

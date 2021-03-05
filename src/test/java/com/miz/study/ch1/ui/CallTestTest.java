@@ -12,6 +12,7 @@ class CallTestTest {
 
     @Autowired
     private CallTest callTest;
+
     @Test
     void call() {
         assertEquals(callTest.call(),1);

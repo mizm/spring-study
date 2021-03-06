@@ -1,5 +1,5 @@
 Create Table USERS (
-    id varchar,
+    id varchar ,
     name varchar,
     password varchar
 );

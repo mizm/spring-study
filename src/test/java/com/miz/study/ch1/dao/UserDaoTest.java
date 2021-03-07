@@ -1,5 +1,6 @@
 package com.miz.study.ch1.dao;
 
+import com.miz.study.ch1.domain.Level;
 import com.miz.study.ch1.domain.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -19,22 +20,15 @@ class UserDaoTest {
     @Autowired
     private UserDao userDao;
 
-    private User user, user1, user2;
+    private User user, user1, user2, user3, user4;
 
     @BeforeEach
     void setUp() {
-        user = new User();
-        user.setId("1");
-        user.setName("Ee");
-        user.setPassword("11");
-        user1 = new User();
-        user1.setId("2");
-        user1.setName("Ees");
-        user1.setPassword("11");
-        user2 = new User();
-        user2.setId("3");
-        user2.setName("Eeq");
-        user2.setPassword("11");
+        user = new User("1","일번","12", Level.BASIC,1,0,"didehgur1@naver.com");
+        user1 = new User("2","이번","12",Level.SILVER,55,10,"didehgur1@naver.com");
+        user2 = new User("3","삼번","12",Level.GOLD,100,40,"didehgur1@naver.com");
+        user3 = new User("4","삼번","12",Level.GOLD,100,40,"didehgur1@naver.com");
+        user4 = new User("5","삼번","12",Level.GOLD,100,40,"didehgur1@naver.com");
     }
     @Test
     void addAndGet()  {
@@ -103,11 +97,32 @@ class UserDaoTest {
         checkSameUser(user2, users3.get(2));
 
     }
+    @Test
+    public void update() {
+        userDao.deleteAll();
+        userDao.add(user);
+        user.setName("수정");
+        user.setPassword("44");
+        user.setLevel(Level.GOLD);
+        user.setLogin(1000);
+        user.setRecommend(999);
+        user.setEmail("didehgur2@naver.com");
+        userDao.update(user);
+        User userUpdate = userDao.get(user.getId());
+        checkSameUser(user,userUpdate);
+        userDao.add(user1);
+        User user1Update = userDao.get(user1.getId());
+        checkSameUser(user1,user1Update);
+    }
 
     private void checkSameUser(User user1, User user) {
         assertEquals(user.getId(),user1.getId());
         assertEquals(user.getName(),user1.getName());
         assertEquals(user.getPassword(),user1.getPassword());
+        assertEquals(user.getLevel(),user1.getLevel());
+        assertEquals(user.getLogin(),user1.getLogin());
+        assertEquals(user.getRecommend(),user1.getRecommend());
+        assertEquals(user.getEmail(),user1.getEmail());
     }
 
     //@DirtiesContext -> 특정 테스트에서 어플리케이션 컨텍스트에서 가져온 (@Autowired userDao)의 상태를 변경하고 싶을때 다는 어노테이션

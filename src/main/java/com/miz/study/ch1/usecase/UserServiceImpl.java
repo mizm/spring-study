@@ -21,38 +21,24 @@ public class UserServiceImpl implements UserService {
 
     public static final int MIN_LOGCOUNT_FOR_SILVER = 50;
     public static final int MIN_RECCOMEND_FOR_GOLD = 30;
+
     private UserDao userDao;
 
-    public void setUserLevelUpgradePolicy(UserLevelUpgradePolicy userLevelUpgradePolicy) {
-        this.userLevelUpgradePolicy = userLevelUpgradePolicy;
-    }
 
     private UserLevelUpgradePolicy userLevelUpgradePolicy;
-    private PlatformTransactionManager transactionManager;
     
-    public UserServiceImpl(UserDao userDao, UserLevelUpgradePolicy userLevelUpgradePolicy, PlatformTransactionManager transactionManager) {
-
+    public UserServiceImpl(UserDao userDao, UserLevelUpgradePolicy userLevelUpgradePolicy) {
         this.userDao = userDao;
         this.userLevelUpgradePolicy = userLevelUpgradePolicy;
-        this.transactionManager = transactionManager;
     }
 
 
     @Override
-    public void upgradeLevels() throws Exception{
-
-        TransactionStatus status = this.transactionManager.getTransaction(new DefaultTransactionDefinition());
-        
-        try {
-            List<User> users = userDao.getAll();
-            for (User user : users) {
-                if (userLevelUpgradePolicy.canUpgradeLevel(user))
-                    userLevelUpgradePolicy.upgradeLevel(user);
-            }
-            this.transactionManager.commit(status);
-        } catch (Exception e) {
-            this.transactionManager.rollback(status);
-            throw e;
+    public void upgradeLevels() {
+        List<User> users = userDao.getAll();
+        for (User user : users) {
+            if (userLevelUpgradePolicy.canUpgradeLevel(user))
+                userLevelUpgradePolicy.upgradeLevel(user);
         }
     }
 

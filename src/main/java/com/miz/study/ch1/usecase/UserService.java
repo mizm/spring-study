@@ -8,5 +8,4 @@ public interface UserService {
 
     void upgradeLevels() throws Exception;
     void add(User user);
-    void setUserLevelUpgradePolicy(UserLevelUpgradePolicy userLevelUpgradePolicy);
 }

@@ -1,6 +1,7 @@
 package com.miz.study.ch1.dao;
 
 import com.miz.study.ch1.domain.User;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 

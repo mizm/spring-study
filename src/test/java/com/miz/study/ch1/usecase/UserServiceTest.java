@@ -8,6 +8,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.ApplicationContext;
 import org.springframework.mail.MailSender;
@@ -27,34 +28,17 @@ import static org.mockito.Mockito.*;
 
 @SpringBootTest
 class UserServiceTest {
+
     @Autowired
     private UserService userService;
 
     @Autowired
+    private UserService testUserService;
+    @Autowired
     private UserDao userDao;
 
-    @Autowired
-    private MailSender mailSender;
 
-    @Autowired
-    private ApplicationContext context;
-    static class TestUserService extends UserServiceImpl {
-        public TestUserService(UserDao userDao, UserLevelUpgradePolicy userLevelUpgradePolicy) {
-            super(userDao, userLevelUpgradePolicy);
-        }
-    }
-    static class TestUserLevelUpgradePolicy extends UserLevelUpgradePolicyImpl {
-        private String id;
-        public TestUserLevelUpgradePolicy(UserDao userDao, String id, MailSender mailSender) {
-            super(userDao,mailSender);
-            this.id = id;
-        }
 
-        public void upgradeLevel(User user) {
-            if(user.getId().equals(this.id)) throw new TestUserServiceException();
-            super.upgradeLevel(user);
-        }
-    }
     static class MockUserDao implements UserDao {
         private List<User> users;
         private List<User> updated = new ArrayList<>();
@@ -174,22 +158,24 @@ class UserServiceTest {
     }
 
     @Test
-    void upgradeAllOrNothing() throws Exception{
-
-        TestUserService testUserService = new TestUserService(
-                userDao
-                ,new TestUserLevelUpgradePolicy(userDao,users.get(3).getId(),mailSender));
-        userDao.deleteAll();
-
-        TxPorxyFactoryBean txPorxyFactoryBean = context.getBean("&userService", TxPorxyFactoryBean.class);
-        txPorxyFactoryBean.setTarget(testUserService);
-        UserService txUserService = (UserService) txPorxyFactoryBean.getObject();
+    void upgradeAllOrNothing(){
+//
+//        TestUserService testUserService = new TestUserService(
+//                userDao
+//                ,new TestUserLevelUpgradePolicy(userDao,users.get(3).getId(),mailSender));
+//        userDao.deleteAll();
+////
+////        TxPorxyFactoryBean txPorxyFactoryBean = context.getBean("&userService", TxPorxyFactoryBean.class);
+////        txPorxyFactoryBean.setTarget(testUserService);
+////        UserService txUserService = (UserService) txPorxyFactoryBean.getObject();
+        System.out.println(testUserService);
+        //fail("TestUserServiceException expected");
         for(User user : users) userDao.add(user);
         try {
-            txUserService.upgradeLevels();
-            fail("TestUserServiceException expected");
-        } catch( TestUserServiceException e) {
-
+            testUserService.upgradeLevels();
+        } catch( Exception e) {
+            System.out.println("asdad");
+            System.out.println(e.getMessage());
         }
         checkLevelUpgraded(users.get(1), false);
     }

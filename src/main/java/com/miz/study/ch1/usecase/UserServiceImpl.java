@@ -9,6 +9,7 @@ import org.springframework.jdbc.datasource.DataSourceUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.TransactionStatus;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.support.DefaultTransactionDefinition;
 import org.springframework.transaction.support.TransactionSynchronizationManager;
 
@@ -34,17 +35,39 @@ public class UserServiceImpl implements UserService {
 
 
     @Override
-    public void upgradeLevels() {
+    public void upgradeLevels() throws Exception {
         List<User> users = userDao.getAll();
-        for (User user : users) {
-            if (userLevelUpgradePolicy.canUpgradeLevel(user))
-                userLevelUpgradePolicy.upgradeLevel(user);
-        }
+
+            for (User user : users) {
+                if (userLevelUpgradePolicy.canUpgradeLevel(user))
+                    userLevelUpgradePolicy.upgradeLevel(user);
+            }
+
     }
 
     @Override
     public void add(User user) {
         if(user.getLevel() == null) user.setLevel(Level.BASIC);
         userDao.add(user);
+    }
+
+    @Override
+    public void deleteAll() {
+        userDao.deleteAll();
+    }
+
+    @Override
+    public void update(User user) {
+        userDao.update(user);
+    }
+
+    @Override
+    public User get(String id) {
+        return userDao.get(id);
+    }
+
+    @Override
+    public List<User> getAll() {
+        return userDao.getAll();
     }
 }

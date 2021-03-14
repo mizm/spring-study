@@ -35,7 +35,7 @@ public class UserServiceImpl implements UserService {
 
 
     @Override
-    public void upgradeLevels() throws Exception {
+    public void upgradeLevels() {
         List<User> users = userDao.getAll();
 
             for (User user : users) {

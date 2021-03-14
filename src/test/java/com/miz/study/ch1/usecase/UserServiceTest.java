@@ -158,7 +158,7 @@ class UserServiceTest {
     }
 
     @Test
-    void upgradeAllOrNothing(){
+    void upgradeAllOrNothing() {
 //
 //        TestUserService testUserService = new TestUserService(
 //                userDao
@@ -168,12 +168,12 @@ class UserServiceTest {
 ////        TxPorxyFactoryBean txPorxyFactoryBean = context.getBean("&userService", TxPorxyFactoryBean.class);
 ////        txPorxyFactoryBean.setTarget(testUserService);
 ////        UserService txUserService = (UserService) txPorxyFactoryBean.getObject();
-        System.out.println(testUserService);
-        //fail("TestUserServiceException expected");
+        //
         for(User user : users) userDao.add(user);
         try {
             testUserService.upgradeLevels();
-        } catch( Exception e) {
+            fail("TestUserServiceException expected");
+        } catch( TestUserServiceException e) {
             System.out.println("asdad");
             System.out.println(e.getMessage());
         }

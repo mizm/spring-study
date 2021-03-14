@@ -43,7 +43,7 @@ public class UserLevelUpgradePolicyImpl implements UserLevelUpgradePolicy{
     }
 
     @Override
-    public void upgradeLevel(User user) throws Exception {
+    public void upgradeLevel(User user) {
         user.upgradeLevel();
         userDao.update(user);
         sendUpgradeEmail(user);

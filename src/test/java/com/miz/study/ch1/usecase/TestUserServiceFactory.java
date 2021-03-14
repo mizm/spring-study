@@ -19,14 +19,11 @@ import javax.sql.DataSource;
 import java.util.List;
 
 @Configuration
-@EnableTransactionManagement
 public class TestUserServiceFactory {
     @Autowired
     UserDao userDao;
     @Autowired
     private MailSender mailSender;
-    @Autowired
-    private DataSource dataSource;
 
     static class TestUserLevelUpgradePolicy extends UserLevelUpgradePolicyImpl {
         private String id;
@@ -36,12 +33,13 @@ public class TestUserServiceFactory {
             this.id = id;
         }
 
-        public void upgradeLevel(User user) throws Exception {
-            if(user.getId().equals(this.id)) throw new Exception("test");
+        public void upgradeLevel(User user){
+            if(user.getId().equals(this.id)) throw new TestUserServiceException();
             super.upgradeLevel(user);
         }
     }
 
+    @Transactional(rollbackFor = TestUserServiceException.class)
     static class TestUserService extends UserServiceImpl{
 
         public TestUserService(UserDao userDao, UserLevelUpgradePolicy userLevelUpgradePolicy) {
@@ -59,9 +57,5 @@ public class TestUserServiceFactory {
         UserService userService
                 = new UserServiceImpl(userDao,new UserLevelUpgradePolicyImpl(userDao,mailSender));
         return userService;
-    }
-    @Bean
-    public PlatformTransactionManager transactionManager() {
-        return new DataSourceTransactionManager(dataSource);
     }
 }

@@ -18,5 +18,5 @@ public interface UserService {
     //@Transactional(readOnly=true)
     List<User> getAll();
 
-    void upgradeLevels() throws Exception;
+    void upgradeLevels();
 }

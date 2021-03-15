@@ -49,7 +49,7 @@ public class TestUserServiceFactory {
     @Bean(name="testUserService")
     public UserService testUserService() {
         TestUserService userService
-                = new TestUserService(userDao,new TestUserLevelUpgradePolicy(userDao,"3",mailSender));
+                = new TestUserService(userDao,new TestUserLevelUpgradePolicy(userDao,"4",mailSender));
         return userService;
     }
     @Bean(name="userService")

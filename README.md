@@ -1,4 +1,4 @@
-# spring-study
+# spring-study.
 spring study with Toby-Spring3.1
 
 ## jdbc 동작순서
